@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RSS Feed</title>
+</head>
+<body>
+    <div id="rssFeed"></div>
+
+    <script>
+        // Đường dẫn đến RSS feed
+        var rssFeedUrl = 'https://thethao247.vn/cau-long-c44.rss';
+
+        // Số lượng mục (items) cần hiển thị
+        var numberOfItems = 5;
+
+        // Lấy dữ liệu RSS thông qua XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var xmlDoc = this.responseXML;
+                var items = xmlDoc.getElementsByTagName('item');
+                var html = '';
+
+                // Lặp qua các mục (items) để tạo phần tử HTML tương ứng
+                for (var i = 0; i < Math.min(items.length, numberOfItems); i++) {
+                    var item = items[i];
+                    var title = item.getElementsByTagName('title')[0].textContent;
+                    var description = item.getElementsByTagName('description')[0].textContent;
+                    var link = item.getElementsByTagName('link')[0].textContent;
+                    var image = item.getElementsByTagName('img')[0].getAttribute('src');
+
+                    // Tạo phần tử HTML
+                    html += '<div class="rss-item">';
+                    html += '<h2><a href="' + link + '">' + title + '</a></h2>';
+                    html += '<img src="' + image + '" alt="' + title + '" />';
+                    html += '<p>' + description + '</p>';
+                    html += '</div>';
+                }
+
+                // Gán phần tử HTML vào div có id "rssFeed"
+                document.getElementById('rssFeed').innerHTML = html;
+            }
+        };
+        xhr.open('GET', rssFeedUrl, true);
+        xhr.send();
+    </script>
+</body>
+</html>
